@@ -1,0 +1,24 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [main]  # Runs this workflow when a PR is made to main
+
+jobs:
+  test:
+    runs-on: windows-latest  # Runs on a Windows machine
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Clones your repo into the runner
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'  # Adjust this if you're using another version
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Installs project dependencies
+
+      - name: Run tests
+        run: pytest  # Runs all your test cases
