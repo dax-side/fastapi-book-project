@@ -1,0 +1,19 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [main]  # Runs when code is pushed to main
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy FastAPI App
+        run: |
+          echo "Deploying application..."
+          # If using a server, SSH into it and pull the latest code.
+          # Example: ssh user@your_server "cd /path/to/app && git pull && systemctl restart my-fastapi-app"
