@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest  # Runs on a Windows machine
+    runs-on: windows-latest  # Runs on a windows machine
 
     steps:
       - name: Checkout repository
