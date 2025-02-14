@@ -2,18 +2,40 @@ name: CD Pipeline
 
 on:
   push:
-    branches: [main]  # Runs when code is pushed to main
+    branches:
+      - main  # Deploy on push to main branch
 
 jobs:
   deploy:
-    runs-on: windows-latest
-
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Checks out your repository
 
-      - name: Deploy FastAPI App
-        run: |
-          echo "Deploying application..."
-          # If using a server, SSH into it and pull the latest code.
-          # Example: ssh user@your_server "cd /path/to/app && git pull && systemctl restart my-fastapi-app"
+      - name: CD Pipeline
+        uses: appleboy/ssh-action@v1.0.0  # SSH action to deploy to your VPS
+        with:
+          host: ${{ secrets.VPS_IP }}           # Use your VPS IP
+          username: ${{ secrets.VPS_USERNAME }} # Use your VPS username
+          key: ${{ secrets.VPS_PRIVATE_KEY }}    # Use your private SSH key
+          script: |
+            # Navigate to your FastAPI app directory
+            cd ~/my_fastapi_project
+            git pull origin main                # Pull the latest code from the main branch
+            
+            # Activate the virtual environment and install dependencies
+            source venv/bin/activate
+            pip install -r requirements.txt
+            
+            # Restart your FastAPI app (replace with your service name)
+            sudo systemctl restart fastapi-app
+
+            # Ensure Nginx is running and restart if necessary
+            if ! systemctl is-active --quiet nginx; then
+              sudo systemctl start nginx
+              sudo systemctl enable nginx
+            fi
+
+            # Reload Nginx configuration
+            sudo nginx -t && sudo systemctl reload nginx
