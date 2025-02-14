@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - main  # Deploy on push to main branch
+      - main
 
 jobs:
   deploy:
@@ -11,14 +11,14 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  # Checks out your repository
+        uses: actions/checkout@v3
 
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.0  # SSH action to deploy to your VPS
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.VPS_IP }}           # Use your VPS IP
-          username: ${{ secrets.VPS_USERNAME }} # Use your VPS username
-          key: ${{ secrets.VPS_PRIVATE_KEY }}    # Use your private SSH key
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_PRIVATE_KEY }}
           script: |
             # Navigate to your FastAPI app directory
             cd ~/my_fastapi_project
