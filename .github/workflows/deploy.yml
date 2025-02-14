@@ -1,4 +1,4 @@
-name: CD Pipeline
+name: Deploy to VPS
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3  # Checks out your repository
 
-      - name: CD Pipeline
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0  # SSH action to deploy to your VPS
         with:
           host: ${{ secrets.VPS_IP }}           # Use your VPS IP
